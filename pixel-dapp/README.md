@@ -1,4 +1,4 @@
-# canvas-dapp
+# pixel-dapp
 
 ## Project setup
 ```
