@@ -20,4 +20,8 @@ contract Canvas {
       pixels[_x][_y].owner = msg.sender;
       emit PixelBought(_x, _y, _color);
   }
+
+  function getRow(uint _row) public view returns(S_Pixel[256] memory) {
+    return pixels[_row];
+  }
 }
