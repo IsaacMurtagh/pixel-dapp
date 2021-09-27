@@ -1,5 +1,6 @@
 # Pixel canvas app
-An appl
+An dapp which allows you to transact on the block chain the buy pixels on a canvas
+visit `https://isaacmurtagh.github.io/pixel-dapp/` to use it
 
 ## Running in development
 1. Open Ganache and run an RCP server on `http://127.0.0.1:8545`
@@ -32,5 +33,15 @@ yarn build
 ```
 4. Create a subtree for the output dist files
 ```bash
+# If subtree does not exist
 git subtree push --prefix pixel-dapp/dist origin gh-pages
-```
+# If subtree does exist
+git checkout gh-pages
+g rm -rf *
+g checkout master pixel-dapp/dist
+mv pixel-dapp/dist/* .
+g add *
+g commit -m "Update subtree to master dist"
+g push -f
+```  
+5. visit `https://isaacmurtagh.github.io/pixel-dapp/`
