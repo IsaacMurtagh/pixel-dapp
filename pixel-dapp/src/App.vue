@@ -16,9 +16,8 @@
 
 <script>
 
-import CanvasContract from './contracts/Canvas.js';
-import CanvasComponent from './components/Canvas.vue'
-
+import Canvas from './contracts/Canvas.js';
+import CanvasComponent from './components/Canvas.vue';
 export default {
   name: 'App',
 
@@ -30,29 +29,27 @@ export default {
     return {
       canvasContract: null,
       canvasLoaded: false,
-      canvasMatrix: null,
+      canvasMatrix: [],
     }
   },
 
   async created() {
-    this.canvasContract = await CanvasContract.getCanvas();
-
+    this.canvasClient = await Canvas.getClient();
   },
 
   methods: {
     async getStartingWeiPrice() {
-      const result = await this.canvasContract.methods.startingPriceWei().call();
-      console.log(result);
+      const cost = await this.canvasClient.getStartingWeiPrice();
+      console.log(cost);
     },
 
     async getCanvasPixels() {
       const matrix = Array.apply(null, Array(20)).map(() => Array.apply(null, Array(20)));
-      const result = await Promise.all(matrix.map(async (row, y) => {
+      this.canvasMatrix = await Promise.all(matrix.map(async (row, y) => {
         return Promise.all(row.map(async (_, x) => {
-          return (await this.canvasContract.methods.pixels(x, y).call()).color;
+          return (await this.canvasClient.getPixel({ x, y }));
         }));
       }));
-      this.canvasMatrix = result;
       this.canvasLoaded = true;
     },
   }

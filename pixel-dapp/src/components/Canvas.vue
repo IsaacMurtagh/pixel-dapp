@@ -2,27 +2,41 @@
   <div>
     <div
       class="row"
-      v-for="(row, i) in canvasMatrix"
-      :key="`row=${i}`"
+      v-for="(row, y) in canvasMatrix"
+      :key="`row=${y}`"
     >
       <div
-        class="box"
-        v-for="(element, x) in row"
-        :key="`row-${i}-element-${x}`"
-        :style="`background-color: #${decimalToHexColor(element)};`"
+        class="box clickable"
+        v-for="(pixel, x) in row"
+        :key="`row-${y}-col-${x}`"
+        :style="`background-color: #${pixel.hexColor};`"
+        @click="buyTile(x, y)"
       />
     </div>
   </div>
 </template>
 <script>
+import Canvas from '../contracts/Canvas.js';
+
 export default {
   props: {
     canvasMatrix: { type: Array, required: true}
   },
 
+  data() {
+    return {
+      canvasClient: null,
+    }
+  },
+
+  async created() {
+    this.canvasClient = await Canvas.getClient();
+  },
+
   methods: {
-    decimalToHexColor(number) {
-      return ('00000' + number.toString(16)).slice(-6);
+    async buyTile(x, y) {
+      const result = await this.canvasClient.buyPixel({ x, y, color: 2781728});
+      console.log(result);
     }
   }
 }
@@ -38,5 +52,14 @@ export default {
   border: 1px;
   border-color: lightgray;
   border-style: solid;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover {
+  cursor: pointer;
+  opacity: 70%;
 }
 </style>
