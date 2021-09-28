@@ -1,24 +1,25 @@
-import web3Client from '../web3Client';
 import CanvasJson from './Canvas.json';
 import Pixel from '@/models/Pixel';
-import VError from 'verror';
 
 export default class CanvasClient {
   constructor(props) {
-    this.client = props.client
+    this.client = props.client;
+    this.accounts = props.accounts;
   }
 
-  static async getClient() {
+  static async getClient(web3Client) {
     const networkId = await web3Client.eth.net.getId();
-    const client = new web3Client.eth.Contract(CanvasJson.abi, CanvasJson.networks[networkId].address);
-    return new CanvasClient({ client });
+    const accounts = await web3Client.eth.getAccounts();
+    console.log({ networkId, accounts });
+    const client = new web3Client.eth.Contract(CanvasJson.abi, CanvasJson.networks[networkId]?.address);
+    return new CanvasClient({ client, accounts });
   }
 
   async getStartingWeiPrice() {
     try {
       return await this.client.methods.startingPriceWei().call();
     } catch (err) {
-      throw VError(err);
+      console.error(err);
     }
   }
 
@@ -31,20 +32,20 @@ export default class CanvasClient {
         y,
       });
     } catch (err) {
-      throw VError(err);
+      console.error(err);
     }
   }
 
   async buyPixel({ x, y, color }) {
     const value = await this.getStartingWeiPrice();
     try {
-      const accounts = await web3Client.eth.getAccounts();
+      console.log(this.client.methods);
       await this.client.methods.buyPixel(x, y, color).send({
-        from: accounts[0],
+        from: this.accounts[0],
         value,
       });
     } catch (err) {
-      throw VError(err);
+      console.error(err);
     }
   }
 }
