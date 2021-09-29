@@ -16,21 +16,11 @@
   </div>
 </template>
 <script>
-import Canvas from '../contracts/Canvas.js';
 
 export default {
   props: {
-    canvasMatrix: { type: Array, required: true}
-  },
-
-  data() {
-    return {
-      canvasClient: null,
-    }
-  },
-
-  async created() {
-    this.canvasClient = await Canvas.getClient();
+    canvasMatrix: { type: Array, required: true },
+    canvasClient: { type: Object, required: true },
   },
 
   methods: {
