@@ -11,6 +11,7 @@
   "dependencies": {
     "@ckpack/vue-color": "^1.1.0",
     "core-js": "^3.6.5",
+    "vanilla-picker": "^2.11.2",
     "verror": "^1.10.0",
     "vue": "^3.0.0",
     "web3": "^1.5.2"

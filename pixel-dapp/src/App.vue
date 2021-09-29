@@ -6,7 +6,9 @@
     <h2>Pixel Dapp</h2>
     <div class="flex">
 
-      <chrome-picker v-model="color" />
+      <div ref="colorPicker" class="colorPicker" :style="`background-color: ${color}`">
+        Colour Picker
+      </div>
 
       <div style="margin-left: 2rem;">
         <p>The smart contract this relies on is only deployed to the <b>Ropsten Test Network</b></p>
@@ -26,6 +28,8 @@
       </div>
     </div>
 
+    <button @click="getCanvasPixels"> Refresh Canvas </button>
+    <p>{{ canvasLoading ? 'loading...' : '&nbsp;'}}</p>
     <canvas-component 
       style="padding-top: 1rem"
       v-if="canvasLoaded"
@@ -38,9 +42,7 @@
 
 <script>
 
-// import { ColorPicker } from 'vue-color-kit'
-// import 'vue-color-kit/dist/vue-color-kit.css'
-import { Chrome } from '@ckpack/vue-color'
+import Picker from 'vanilla-picker';
 import Canvas from './contracts/Canvas.js';
 import CanvasComponent from './components/Canvas.vue';
 import getWeb3 from './web3Client.js';
@@ -49,7 +51,6 @@ export default {
 
   components: {
     CanvasComponent,
-    'chrome-picker': Chrome
   },
 
   data() {
@@ -57,12 +58,14 @@ export default {
       canvasContract: null,
       clientError: '',
       canvasLoaded: false,
+      canvasLoading: true,
       canvasMatrix: [],
-      color: { hex: '#59c7f9' }
+      color: '#59c7f9',
     }
   },
 
-  async created() {
+  async mounted() {
+    this.setColourPicker();
     if (!this.checkEthereumEnabled()) {
       return;
     }
@@ -79,6 +82,7 @@ export default {
 
   methods: {
     async getCanvasPixels() {
+      this.canvasLoading = true;
       const matrix = Array.apply(null, Array(20)).map(() => Array.apply(null, Array(20)));
       this.canvasMatrix = await Promise.all(matrix.map(async (row, y) => {
         return Promise.all(row.map(async (_, x) => {
@@ -86,6 +90,7 @@ export default {
         }));
       }));
       this.canvasLoaded = true;
+      this.canvasLoading = false;
     },
 
     checkEthereumEnabled() {
@@ -97,6 +102,14 @@ export default {
       }
       return true;
     },
+
+    setColourPicker() {
+      const parent = this.$refs.colorPicker;
+      const colorPicker = new Picker(parent);
+      colorPicker.onClose = (color) => {
+        this.color = color.hex.slice(0, -2);
+      }
+    }
 
     
   }
@@ -120,5 +133,14 @@ export default {
   flex-direction: column;
   align-items: center;
   padding-bottom: 2rem;
+}
+
+.colorPicker {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem;
+  color: white;
 }
 </style>
