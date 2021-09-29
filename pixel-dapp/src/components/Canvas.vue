@@ -6,11 +6,12 @@
       :key="`row=${y}`"
     >
       <div
-        class="box clickable"
+        class="box"
         v-for="(pixel, x) in row"
         :key="`row-${y}-col-${x}`"
+        :class="!pixel.hasOwner ? 'clickable': ''"
         :style="`background-color: #${pixel.hexColor};`"
-        @click="buyTile(x, y)"
+        @click="buyTile(pixel)"
       />
     </div>
   </div>
@@ -21,12 +22,28 @@ export default {
   props: {
     canvasMatrix: { type: Array, required: true },
     canvasClient: { type: Object, required: true },
+    selectedColor: { type: String, required: true },
+  },
+
+  computed: {
+    colorAsDecimal() {
+      return parseInt(this.selectedColor.slice(1), 16)
+    }
   },
 
   methods: {
-    async buyTile(x, y) {
-      const result = await this.canvasClient.buyPixel({ x, y, color: 2781728});
+    async buyTile(pixel) {
+      const { x, y } = pixel;
+      if (pixel.hasOwner) {
+        console.log(`Owner of pixel ${x},${y}: ${pixel.owner}`);
+        return;
+      }
+      const result = await this.canvasClient.buyPixel({ x, y, color: this.colorAsDecimal});
       console.log(result);
+    },
+
+    changeColor(element, el2) {
+      console.log(element, el2);
     }
   }
 }
@@ -49,7 +66,6 @@ export default {
 }
 
 .clickable:hover {
-  cursor: pointer;
   opacity: 70%;
 }
 </style>

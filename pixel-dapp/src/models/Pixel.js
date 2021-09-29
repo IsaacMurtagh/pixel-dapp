@@ -4,9 +4,18 @@ export default class Pixel {
     this.y = props.y;
     this.color = props.color;
     this.owner = props.owner;
+    this.hoverColor;
   }
 
   get hexColor() {
-    return ('00000' + this.color.toString(16)).slice(-6);
+    return this.decimalToHex(this.color);
+  }
+
+  get hasOwner() {
+    return !!parseInt(this.owner);
+  }
+
+  decimalToHex(color) {
+    return ('00000' + color.toString(16)).slice(-6);
   }
 }

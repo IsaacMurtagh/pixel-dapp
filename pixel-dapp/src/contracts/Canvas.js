@@ -39,7 +39,6 @@ export default class CanvasClient {
   async buyPixel({ x, y, color }) {
     const value = await this.getStartingWeiPrice();
     try {
-      console.log(this.client.methods);
       await this.client.methods.buyPixel(x, y, color).send({
         from: this.accounts[0],
         value,

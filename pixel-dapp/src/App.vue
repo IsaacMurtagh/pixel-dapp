@@ -1,30 +1,48 @@
 <template>
-  <div>
+  <div class="container">
     <div v-if="clientError" class="errorMessage">
       <span v-html="clientError"/>
     </div>
-    <div>
-      <button @click="getCanvasPixels">
-        get canvas pixels
-      </button>
-      <button @click="connectWallet">
-        connect to app
-      </button>
-      <button @click="priceInWei">
-        Price in Wei
-      </button>
+    <h2>Pixel Dapp</h2>
+    <div class="flex">
+      <ColorPicker
+        theme="light"
+        :color="color"
+        @changeColor="changeColor"
+      />
+
+      <div style="margin-left: 2rem;">
+        <p>The smart contract this relies on is only deployed to the <b>Ropsten Test Network</b></p>
+        <p>
+          How to use this dapp:
+          <ol>
+            <li>Connect your wallet using a tool, such as MetaMask</li>
+            <li>Select the Ropsten Test Network</li>
+            <li>Choose a colour you would like your pixel to be</li>
+            <li>Select one of the pixels which has not already been bought</li>
+            <li>A transaction request will appear on your wallet, click confirm</li>
+            <li>Admire the pixel you now own on the canvas.</li>
+          </ol>
+          Once you own a pixel on the canvas, no one else buy that pixel
+        </p>
+        <p>Github: <a href="https://github.com/IsaacMurtagh/pixel-dapp">https://github.com/IsaacMurtagh/pixel-dapp</a></p>
+      </div>
     </div>
 
     <canvas-component 
+      style="padding-top: 1rem"
       v-if="canvasLoaded"
       :canvas-matrix="canvasMatrix"
       :canvas-client="canvasClient"
+      :selected-color="color"
     />
   </div>
 </template>
 
 <script>
 
+import { ColorPicker } from 'vue-color-kit'
+import 'vue-color-kit/dist/vue-color-kit.css'
 import Canvas from './contracts/Canvas.js';
 import CanvasComponent from './components/Canvas.vue';
 import getWeb3 from './web3Client.js';
@@ -32,7 +50,8 @@ export default {
   name: 'App',
 
   components: {
-    CanvasComponent
+    CanvasComponent,
+    ColorPicker
   },
 
   data() {
@@ -41,16 +60,17 @@ export default {
       clientError: '',
       canvasLoaded: false,
       canvasMatrix: [],
-      accounts: [],
+      color: '#59c7f9'
     }
   },
 
   async created() {
+    if (!this.checkEthereumEnabled()) {
+      return;
+    }
     const web3Client = await getWeb3();
-    this.accounts = await web3Client.eth.getAccounts();
     this.canvasClient = await Canvas.getClient(web3Client);
     await this.getCanvasPixels();
-    console.log(this.accounts);
   },
 
   methods: {
@@ -64,9 +84,18 @@ export default {
       this.canvasLoaded = true;
     },
 
-    async priceInWei() {
-      const price = await this.canvasClient.getStartingWeiPrice();
-      console.log(price);
+    checkEthereumEnabled() {
+      if (!window.ethereum) {
+        this.clientError = `
+        An ethereum compatible browser is required, download MetaMask to use this.
+        `
+        return false;
+      }
+      return true;
+    },
+
+    changeColor(color) {
+      this.color = color.hex
     },
 
     
@@ -80,5 +109,16 @@ export default {
   background-color: lightgray;
   display: flex;
   justify-content: center;
+  width: 100%;
+}
+
+.flex {
+  display: flex;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 2rem;
 }
 </style>
