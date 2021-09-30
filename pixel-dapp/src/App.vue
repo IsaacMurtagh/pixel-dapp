@@ -11,7 +11,8 @@
       </div>
 
       <div style="margin-left: 2rem;">
-        <p>The smart contract this relies on is only deployed to the <b>Ropsten Test Network</b></p>
+        <p>The smart contract this relies on is only deployed to the networks</p>
+        <p><b>Ropsten Test Network</b> and localhost:8545, network 5777 </p>
         <p>
           How to use this dapp:
           <ol>
@@ -22,7 +23,7 @@
             <li>A transaction request will appear on your wallet, click confirm</li>
             <li>Admire the pixel you now own on the canvas.</li>
           </ol>
-          Once you own a pixel on the canvas, no one else buy that pixel
+          Once you own a pixel on the canvas, no one else can buy that pixel
         </p>
         <p>Github: <a href="https://github.com/IsaacMurtagh/pixel-dapp">https://github.com/IsaacMurtagh/pixel-dapp</a></p>
       </div>

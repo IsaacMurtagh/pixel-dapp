@@ -7,6 +7,13 @@ export default class Pixel {
     this.hoverColor;
   }
 
+  static fromSmartContract(res) {
+    return new Pixel({
+      ...res,
+      color: Number(res.color),
+    })
+  }
+
   get hexColor() {
     return `#${this.decimalToHex(this.color)}`;
   }

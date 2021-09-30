@@ -19,20 +19,26 @@ export default class CanvasClient {
     try {
       return await this.client.methods.startingPriceWei().call();
     } catch (err) {
-      console.error(err);
+      console.error({
+        name: 'getStartingWeiPrice',
+        err
+      });
     }
   }
 
   async getPixel({ x, y }) {
     try {
       const result = await this.client.methods.pixels(x, y).call();
-      return new Pixel({
+      return Pixel.fromSmartContract({
         ...result,
         x,
         y,
       });
     } catch (err) {
-      console.error(err);
+      console.error({
+        name: 'getPixel',
+        err
+      });
     }
   }
 
@@ -44,7 +50,10 @@ export default class CanvasClient {
         value,
       });
     } catch (err) {
-      console.error(err);
+      console.error({
+        name: 'buyPixel',
+        err
+      });
     }
   }
 }
