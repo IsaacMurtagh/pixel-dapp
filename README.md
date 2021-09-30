@@ -26,22 +26,9 @@ yarn serve
 ```bash
 truffle migrate --network ropsten
 ```
-3. Build the dapp in production mode
+3. Deploy frontend
 ```
 cd pixel-dapp
-yarn build
+yarn deploy
 ```
-4. Create a subtree for the output dist files
-```bash
-# If subtree does not exist
-git subtree push --prefix pixel-dapp/dist origin gh-pages
-# If subtree does exist
-git checkout gh-pages
-g rm -rf *
-g checkout master pixel-dapp/dist
-mv pixel-dapp/dist/* .
-g add *
-g commit -m "Update subtree to master dist"
-g push -f
-```  
 5. visit `https://isaacmurtagh.github.io/pixel-dapp/`
