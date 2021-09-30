@@ -36,11 +36,4 @@ contract("Canvas", accounts => {
     }).then(() => assert.fail('Should throw when pixel is already owned'))
       .catch((err) => assert.include(err.message, 'revert', 'Error message should contain revert'));
   });
-
-  it('get all pixels in the canvas', async () => {
-    const canvasInstance = await Canvas.deployed();
-    const result = await canvasInstance.getCanvas();
-
-    console.log(result);
-  });
 });

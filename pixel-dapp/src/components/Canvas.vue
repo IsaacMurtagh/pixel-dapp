@@ -10,7 +10,7 @@
         v-for="(pixel, x) in row"
         :key="`row-${y}-col-${x}`"
         :class="!pixel.hasOwner ? 'clickable': ''"
-        :style="`background-color: #${pixel.hexColor};`"
+        :style="`background-color: ${pixel.rgbColor}; border-color: ${pixel.rgbColor};`"
         @click="buyTile(pixel)"
       />
     </div>
@@ -38,13 +38,9 @@ export default {
         console.log(`Owner of pixel ${x},${y}: ${pixel.owner}`);
         return;
       }
-      const result = await this.canvasClient.buyPixel({ x, y, color: this.colorAsDecimal});
-      console.log(result);
-    },
+      await this.canvasClient.buyPixel({ x, y, color: this.colorAsDecimal});
 
-    changeColor(element, el2) {
-      console.log(element, el2);
-    }
+    },
   }
 }
 </script>
@@ -57,12 +53,12 @@ export default {
   width: 2rem;
   height: 2rem;
   border: 1px;
-  border-color: lightgray;
   border-style: solid;
 }
 
 .clickable {
   cursor: pointer;
+  border-color: lightgray !important;
 }
 
 .clickable:hover {
