@@ -35,7 +35,7 @@
       v-if="canvasLoaded"
       :canvas-matrix="canvasMatrix"
       :canvas-client="canvasClient"
-      :selected-color="hexColor"
+      :selected-color="color"
     />
   </div>
 </template>
@@ -72,12 +72,6 @@ export default {
     const web3Client = await getWeb3();
     this.canvasClient = await Canvas.getClient(web3Client);
     await this.getCanvasPixels();
-  },
-
-  computed: {
-    hexColor() {
-      return this.color.hex;
-    }
   },
 
   methods: {
